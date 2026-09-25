@@ -17,12 +17,24 @@ export default async function(req,res){
     if(!r.ok)return res.json({images:[]});
     const html=await r.text();
     const images=[];
-    const add=v=>{const u=abs(url,v);if(u&&!images.includes(u)&&/^https?:/i.test(u))images.push(u)};
+    const add=(v,score=0)=>{
+      const u=abs(url,v);
+      if(!u||images.some(x=>x.url===u)||!/^https?:/i.test(u))return;
+      images.push({url:u,score});
+    };
     const metaRe=/<meta[^>]+(?:property|name)=["'](?:og:image|twitter:image)["'][^>]+content=["']([^"']+)["'][^>]*>/gi;
     let m;
-    while((m=metaRe.exec(html))&&images.length<6)add(m[1]);
-    const imgRe=/<img[^>]+(?:src|data-src)=["']([^"']+)["'][^>]*>/gi;
-    while((m=imgRe.exec(html))&&images.length<6)add(m[1]);
-    res.json({images});
+    while((m=metaRe.exec(html))&&images.length<12)add(m[1],2);
+    const imgRe=/<img[^>]+([^>]*?)(?:src|data-src)=["']([^"']+)["']([^>]*)>/gi;
+    while((m=imgRe.exec(html))&&images.length<30){
+      const attrs=(m[1]+" "+m[3]).toLowerCase();
+      const src=m[2];
+      let score=0;
+      if(/store|shop|salon|spa|groom|gallery|exterior|interior|location|venue/.test(attrs+" "+src.toLowerCase()))score+=5;
+      if(/logo|icon|avatar|favicon|badge|payment|whatsapp/.test(attrs+" "+src.toLowerCase()))score-=8;
+      add(src,score);
+    }
+    images.sort((a,b)=>b.score-a.score);
+    res.json({images:images.slice(0,6).map(x=>x.url)});
   }catch(e){res.json({images:[]})}
 }
