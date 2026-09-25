@@ -29,12 +29,16 @@ export default async function(req,res){
     while((m=imgRe.exec(html))&&images.length<30){
       const attrs=(m[1]+" "+m[3]).toLowerCase();
       const src=m[2];
+      const hay=attrs+" "+src.toLowerCase();
       let score=0;
-      if(/store|shop|salon|spa|groom|gallery|exterior|interior|location|venue/.test(attrs+" "+src.toLowerCase()))score+=5;
-      if(/logo|icon|avatar|favicon|badge|payment|whatsapp/.test(attrs+" "+src.toLowerCase()))score-=8;
+      if(/store|shop|salon|spa|gallery|exterior|interior|location|venue/.test(hay))score+=5;
+      if(hay.includes("/services/")||hay.includes("/service-")||hay.includes("grooming"))score-=6;
+      if(/logo|icon|avatar|favicon|badge|payment|whatsapp/.test(hay))score-=8;
+      if(hay.includes("/store/")||hay.includes("store_")||hay.includes("store-"))score+=6;
       add(src,score);
     }
     images.sort((a,b)=>b.score-a.score);
-    res.json({images:images.slice(0,6).map(x=>x.url)});
+    const storeImages=images.filter(x=>x.score>=5).slice(0,6);
+    res.json({images:storeImages.map(x=>x.url)});
   }catch(e){res.json({images:[]})}
 }
