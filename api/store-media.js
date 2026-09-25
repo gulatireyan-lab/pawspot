@@ -4,7 +4,9 @@ export const methods = ["GET"];
 function clean(v){return String(v||"").trim().slice(0,500)}
 
 function abs(base,value){
-  try{return new URL(value,base).href}catch{return null}
+  const v=String(value||"").replace(/&amp;/g,"&").trim();
+  if(/^https?:\/\//i.test(v))return v;
+  try{return new URL(v,base).href}catch{return null}
 }
 
 export default async function(req,res){
