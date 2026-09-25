@@ -55,7 +55,9 @@ button{border:0;background:#ff6b35;color:#fff;font-weight:800;cursor:pointer;mar
         const d=await A.verifyCode({email:email.value.trim(),code:code.value.trim()});
         if(d&&d.user){location.replace(next())}else say('That code did not work. Try again.',true);
       }
-    }catch(err){say('Unable to continue right now. Please try again shortly.',true)}
+    }catch(err){say((err&&err.status===429)
+      ? 'Please wait a few seconds and try again.'
+      : ((err&&err.message)||'Something went wrong. Please try again.'),true)}
     submit.disabled=false;
   });
   back.onclick=()=>{step='email';email.hidden=false;code.hidden=true;back.hidden=true;submit.textContent='Continue';title.textContent='Welcome back';sub.textContent="Sign in with your email. We'll send you a one-time code — no password needed.";say('');email.focus()}
