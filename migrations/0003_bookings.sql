@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS bookings (
+ id BIGSERIAL PRIMARY KEY,user_id TEXT NOT NULL,center_id BIGINT NOT NULL REFERENCES grooming_centers(id),dog_name TEXT NOT NULL,service TEXT NOT NULL,booking_date DATE NOT NULL,notes TEXT,status TEXT NOT NULL DEFAULT 'requested',created_at TIMESTAMP NOT NULL DEFAULT now(),updated_at TIMESTAMP NOT NULL DEFAULT now());

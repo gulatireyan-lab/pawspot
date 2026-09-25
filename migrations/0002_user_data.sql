@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS pet_profiles (
+ id BIGSERIAL PRIMARY KEY,user_id TEXT NOT NULL UNIQUE,phone TEXT,dog_name TEXT,breed TEXT,created_at TIMESTAMP NOT NULL DEFAULT now(),updated_at TIMESTAMP NOT NULL DEFAULT now());
