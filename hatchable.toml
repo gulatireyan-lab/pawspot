@@ -3,3 +3,11 @@ enabled = true
 providers = ["email"]
 login_path = "/login"
 hosted_login = false
+
+[db.tables.bookings]
+read = "own"
+write = "own"
+
+[db.tables.pet_profiles]
+read = "own"
+write = "own"
