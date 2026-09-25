@@ -1,0 +1,68 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PawSpot — Find the best grooming for your dog</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="//unpkg.com/alpinejs" defer></script>
+<style>
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;background:#fffaf5;color:#202020}.card{background:white;border:1px solid #eee5dc;border-radius:22px;box-shadow:0 8px 28px rgba(70,45,20,.07)}.pill{border:1px solid #eadfd5;background:white;border-radius:999px}.orange{background:#ff6b35}.cream{background:#fff1e8}
+</style></head>
+<body x-data="app()">
+<header class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-orange-100">
+<div class="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
+<a class="text-2xl font-black tracking-tight text-gray-900" href="#"><span class="text-orange-500">🐾</span> PawSpot</a>
+<nav class="hidden md:flex gap-7 text-sm font-semibold text-gray-600"><a href="#explore">Explore</a><a href="#how">How it works</a><a href="#business">For grooming centers</a></nav>
+<button class="orange text-white px-5 py-2.5 rounded-full font-bold" @click="showBooking=true">Book grooming</button>
+</div></header>
+
+<main>
+<section class="bg-gradient-to-br from-orange-50 via-white to-amber-50">
+<div class="max-w-6xl mx-auto px-5 pt-16 pb-14 grid md:grid-cols-2 gap-12 items-center">
+<div><div class="inline-flex cream text-orange-700 px-4 py-2 rounded-full font-bold text-sm mb-5">India's dog grooming discovery app</div>
+<h1 class="text-5xl md:text-6xl font-black leading-[1.02] tracking-tight">Happy dogs.<br><span class="text-orange-500">Freshly groomed.</span></h1>
+<p class="text-lg text-gray-600 mt-6 max-w-xl">Discover trusted grooming centers, compare prices and reviews, and book a pampering session for your best friend.</p>
+<div class="mt-8 bg-white card p-2 flex flex-col sm:flex-row gap-2">
+<div class="flex-1 flex items-center px-4"><span>📍</span><input x-model="location" class="w-full px-3 py-3 outline-none" placeholder="Enter your area"></div>
+<button @click="explore()" class="orange text-white px-7 py-3 rounded-2xl font-bold">Search</button></div>
+<div class="mt-5 flex gap-5 text-sm text-gray-500"><span>✓ Verified centers</span><span>✓ Real reviews</span><span>✓ Easy booking</span></div>
+</div>
+<div class="relative"><div class="text-[150px] md:text-[190px] text-center drop-shadow-xl">🐶</div><div class="card absolute bottom-4 left-2 md:left-10 px-5 py-4"><div class="font-bold">4.9 ★ average rating</div><div class="text-sm text-gray-500">from happy pet parents</div></div></div>
+</div></section>
+
+<section id="explore" class="max-w-6xl mx-auto px-5 py-14">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-7">
+<div><p class="text-orange-500 font-bold">EXPLORE</p><h2 class="text-3xl font-black mt-1">Top grooming centers near you</h2></div>
+<div class="flex gap-2 overflow-x-auto"><template x-for="f in filters"><button @click="filter=f" class="pill whitespace-nowrap px-4 py-2 text-sm font-semibold" :class="filter===f?'bg-gray-900 text-white':''" x-text="f"></button></template></div>
+</div>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+<template x-for="place in filteredPlaces" :key="place.id"><article class="card overflow-hidden hover:-translate-y-1 transition cursor-pointer" @click="select(place)">
+<div class="h-44 flex items-center justify-center text-7xl" :class="place.bg" x-text="place.emoji"></div>
+<div class="p-5"><div class="flex justify-between gap-2"><h3 class="font-black text-lg" x-text="place.name"></h3><span class="text-sm font-bold bg-green-50 text-green-700 px-2.5 py-1 rounded-lg">★ <span x-text="place.rating"></span></span></div>
+<p class="text-gray-500 text-sm mt-1" x-text="place.area + ' · ' + place.distance"></p>
+<div class="flex flex-wrap gap-2 mt-4"><template x-for="tag in place.tags"><span class="text-xs pill px-3 py-1" x-text="tag"></span></template></div>
+<div class="border-t mt-4 pt-4 flex justify-between items-center"><span class="text-sm text-gray-500">Starting at <b class="text-gray-900" x-text="'₹'+place.price"></b></span><button class="text-orange-600 font-bold">View details →</button></div>
+</div></article></template>
+</div></section>
+
+<section id="how" class="bg-white border-y border-orange-100 py-14"><div class="max-w-6xl mx-auto px-5"><h2 class="text-3xl font-black text-center">Grooming made ridiculously easy</h2><div class="grid md:grid-cols-3 gap-7 mt-10"><template x-for="(step,i) in steps"><div class="text-center px-5"><div class="w-14 h-14 mx-auto rounded-2xl cream flex items-center justify-center text-2xl" x-text="step.icon"></div><h3 class="font-black text-lg mt-4" x-text="step.title"></h3><p class="text-gray-500 mt-2" x-text="step.text"></p></div></template></div></div></section>
+
+<section id="business" class="max-w-6xl mx-auto px-5 py-14"><div class="card bg-gray-900 text-white p-8 md:p-12 flex flex-col md:flex-row justify-between gap-8 items-center"><div><p class="text-orange-400 font-bold">FOR GROOMING CENTERS</p><h2 class="text-3xl font-black mt-2">Bring your business to PawSpot</h2><p class="text-gray-300 mt-3 max-w-xl">Get discovered by local pet parents, showcase your services, collect reviews, and manage bookings.</p></div><button class="bg-white text-gray-900 px-6 py-3 rounded-full font-bold" @click="business=true">List your center</button></div></section>
+</main>
+
+<div x-show="selected" x-cloak class="fixed inset-0 z-40 bg-black/40 p-4 flex items-center justify-center" @click.self="selected=null">
+<div class="bg-white rounded-3xl max-w-lg w-full p-7" x-show="selected"><button class="float-right text-gray-500" @click="selected=null">✕</button><div class="text-6xl mb-3" x-text="selected?.emoji"></div><h2 class="text-2xl font-black" x-text="selected?.name"></h2><p class="text-gray-500 mt-1" x-text="selected?.area + ' · ' + selected?.distance"></p><p class="mt-5 text-gray-600" x-text="selected?.description"></p><div class="grid grid-cols-2 gap-3 mt-5"><div class="cream rounded-2xl p-4"><b>★ <span x-text="selected?.rating"></span></b><div class="text-sm text-gray-500">Rating</div></div><div class="cream rounded-2xl p-4"><b x-text="'₹'+selected?.price"></b><div class="text-sm text-gray-500">Starting price</div></div></div><button class="orange text-white w-full py-3.5 rounded-2xl font-bold mt-5" @click="showBooking=true;selected=null">Book this center</button></div></div>
+
+<div x-show="showBooking" x-cloak class="fixed inset-0 z-50 bg-black/40 p-4 flex items-center justify-center" @click.self="showBooking=false"><div class="bg-white rounded-3xl max-w-md w-full p-7"><button class="float-right" @click="showBooking=false">✕</button><h2 class="text-2xl font-black">Book a grooming session</h2><p class="text-gray-500 mt-1">Tell us about your pup.</p><div class="space-y-4 mt-6"><input class="w-full border rounded-xl px-4 py-3" placeholder="Dog's name"><select class="w-full border rounded-xl px-4 py-3"><option>Choose grooming center</option><template x-for="p in places"><option x-text="p.name"></option></template></select><input type="date" class="w-full border rounded-xl px-4 py-3"><select class="w-full border rounded-xl px-4 py-3"><option>Full grooming</option><option>Bath & blow dry</option><option>Haircut & styling</option><option>Nail trim</option></select><button class="orange text-white w-full py-3.5 rounded-2xl font-bold" @click="booked=true">Request booking</button></div><div x-show="booked" class="mt-4 bg-green-50 text-green-700 p-4 rounded-xl font-semibold">🎉 Booking request received! The center will confirm your slot.</div></div></div>
+
+<div x-show="business" x-cloak class="fixed inset-0 z-50 bg-black/40 p-4 flex items-center justify-center" @click.self="business=false"><div class="bg-white rounded-3xl max-w-md w-full p-7"><button class="float-right" @click="business=false">✕</button><h2 class="text-2xl font-black">List your grooming center</h2><p class="text-gray-500 mt-1">Join PawSpot and reach nearby pet parents.</p><div class="space-y-4 mt-6"><input class="w-full border rounded-xl px-4 py-3" placeholder="Business name"><input class="w-full border rounded-xl px-4 py-3" placeholder="Area / city"><input class="w-full border rounded-xl px-4 py-3" placeholder="Phone or email"><button class="orange text-white w-full py-3.5 rounded-2xl font-bold" @click="businessSent=true">Submit interest</button></div><div x-show="businessSent" class="mt-4 bg-green-50 text-green-700 p-4 rounded-xl">Thanks! We'll be in touch.</div></div></div>
+
+<footer class="bg-gray-950 text-gray-400 py-8"><div class="max-w-6xl mx-auto px-5 flex flex-col md:flex-row justify-between gap-3"><b class="text-white">🐾 PawSpot</b><span>Made for dogs and the humans who love them.</span></div></footer>
+<script>
+function app(){return{location:'',filter:'All',selected:null,showBooking:false,business:false,booked:false,businessSent:false,filters:['All','Top rated','Bath & spa','Haircut','Budget'],steps:[{icon:'🔎',title:'Discover',text:'Compare trusted grooming centers by location, rating, services, and price.'},{icon:'🐕',title:'Choose',text:'See services, reviews, photos, and what each center specializes in.'},{icon:'📅',title:'Book',text:'Pick a convenient date and request your dog’s grooming appointment.'}],places:[
+{id:1,name:'The Paw Spa',area:'Greater Kailash',distance:'1.2 km',rating:'4.9',price:'699',tags:['Full grooming','Spa','Verified'],emoji:'🛁🐶',bg:'bg-orange-100',description:'Premium grooming with gentle handling, breed-specific styling and a relaxing spa finish.'},
+{id:2,name:'Fur & Fluff Studio',area:'Hauz Khas',distance:'2.4 km',rating:'4.8',price:'599',tags:['Haircut','Bath','Popular'],emoji:'✂️🐩',bg:'bg-amber-100',description:'Boutique grooming studio known for stylish cuts, deshedding and careful coat care.'},
+{id:3,name:'Bark & Bubble',area:'Vasant Kunj',distance:'3.1 km',rating:'4.7',price:'499',tags:['Budget','Bath','Nails'],emoji:'🫧🐕',bg:'bg-blue-100',description:'Friendly neighborhood grooming for regular baths, nail trims and tidy-ups.'},
+{id:4,name:'Pawsome Care',area:'Defence Colony',distance:'3.8 km',rating:'4.9',price:'799',tags:['Premium','Spa','Verified'],emoji:'👑🐕',bg:'bg-pink-100',description:'Premium one-on-one grooming with calming techniques and premium coat products.'},
+{id:5,name:'Happy Tails Grooming',area:'Saket',distance:'4.2 km',rating:'4.6',price:'449',tags:['Budget','Haircut'],emoji:'🐶✂️',bg:'bg-green-100',description:'Affordable grooming for busy pet parents, with convenient appointment slots.'},
+{id:6,name:'Woof Works',area:'Indirapuram',distance:'6.4 km',rating:'4.8',price:'649',tags:['Bath & spa','Verified'],emoji:'🧴🐕',bg:'bg-purple-100',description:'Modern grooming center offering baths, breed cuts, paw care and coat treatments.'}],
+get filteredPlaces(){let a=this.places;if(this.filter==='Top rated')a=a.filter(p=>+p.rating>=4.8);if(this.filter==='Budget')a=a.filter(p=>+p.price<550);if(this.filter==='Bath & spa')a=a.filter(p=>p.tags.some(t=>t.includes('Bath')||t==='Spa'));if(this.filter==='Haircut')a=a.filter(p=>p.tags.some(t=>t.includes('Haircut')));return a},explore(){document.querySelector('#explore').scrollIntoView({behavior:'smooth'})},select(p){this.selected=p}}}
+</script></body></html>
