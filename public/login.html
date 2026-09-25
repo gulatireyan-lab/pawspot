@@ -41,7 +41,7 @@ button{border:0;background:#ff6b35;color:#fff;font-weight:800;cursor:pointer;mar
   function say(t,err){msg.textContent=t||'';msg.className='msg'+(err?' err':'')}
   function next(){const raw=new URLSearchParams(location.search).get('next')||'/';return raw.startsWith('/')&&!raw.startsWith('//')?raw:'/'}
   if(!A){say('Sign-in is temporarily unavailable. Please refresh.',true);submit.disabled=true;return}
-  A.getSession().then(s=>{if(s&&s.user)location.replace(next())}).catch(()=>{});
+  // Keep the login page open when opened directly; redirect only after successful sign-in.
   form.addEventListener('submit',async e=>{
     e.preventDefault();submit.disabled=true;say('');
     try{
